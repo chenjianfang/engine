@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script src="./lib/jquery.min.js"></script>
+<script>
+(function(){
+	// var getvalue = [];
+	// var initIndex = 0;
+	// var len = 0;
+	// $.ajax({
+	// 	type:"get",
+	// 	url:"/lib/place.json",
+	// 	dataType:"json",
+	// 	success:function(data){
+	// 		console.log(data);
+	// 		for(var item in data.provide){
+	// 			getvalue.push(data.provide[item]);
+	// 		}
+	// 		for(var el in data.city){
+	// 			for(var ll in data.city[el]){
+	// 				getvalue.push(data.city[el][ll]);
+	// 			}
+	// 		}
+	// 		console.log(getvalue);
+	// 		len = getvalue.length;
+	// 		bigdata();
+	// 	},
+	// 	error:function(){
+	// 		console.log("get json fail")
+	// 	}
+	// });
+	var arr = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+		"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",""
+		];
+	var len = arr.length;
+	var currentVaule = [];
+
+	for(var m = 0; m < len; m++){
+		currentVaule.push(arr[0])
+	}
+	for(var i = 0; i < len; i += 1){
+		for(var j = 0; j < len; j += 1){
+			currentVaule[i] = arr[j];
+			for(var page = 0; page < 100; page += 10){
+				$.ajax({
+					type:"POST",
+					url:"/bigserch",
+					async:false,
+					data:{
+						name:currentVaule.join(""),
+						page:page
+					},
+					success:function(data){
+						console.log(data);
+					},
+					error:function(){
+						console.log("暴力请求失败")
+					}
+				});	
+			}
+		}
+	}
+
+
+
+})();
+
+
+
+
+</script>
+</body>
+</html>

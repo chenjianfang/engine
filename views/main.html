@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<style type="text/css">
+		.search-result{
+			padding-top: 40px;
+			border-top: 1px solid blue;
+		}
+		.select-nav span{
+			cursor: pointer;
+			margin: 20px 20px;
+			padding: 5px 10px;
+			border: 1px solid #ccc;
+		}
+		ul{
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+		}
+		.item{
+			margin-bottom: 20px;
+			border-bottom: 1px solid red;
+		}
+		.item p:nth-child(1){
+			color: blue;
+		}
+		.item p:nth-child(2){
+			color: #ccc;
+		}
+	</style>
+</head>
+<body>
+<form onsubmit="return false">
+	<input type="text" class="name">
+	<input type="text" class="password">
+	<input type="submit" value="send" name="">
+    <button>delet</button>
+    <input type="file" value="图片上传">
+    <div class="fileUpload">上传</div>
+    
+</form>
+<div class="search-result">
+	<div class="select-nav">
+		<span class="started">首页</span>
+		<span class="up-page">上一页</span>
+		<span class="down-page">下一页</span>
+		<span class="ended">尾页</span>
+	</div>
+	<ul>
+		
+	</ul>
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>
+	$("input[type=\"submit\"]").click(function(){
+		$.ajax({
+			type:"POST",
+			url:"/FMval",
+			data:{
+				name:$(".name").val(),
+				pass:$(".password").val()
+			},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+			},
+			error:function(){
+				console.log("xhr error")
+			}
+		})
+	});
+
+	$("button").click(function(){
+		$.ajax({
+			type:"POST",
+			url:"/delLogging",
+			data:{
+				name:$(".name").val(),
+			},
+			dataType:"json",
+			success:function(data){
+				console.log(data)
+			},
+			error:function(){
+				console.log("del error")
+			}
+		})
+	});
+
+	$(".fileUpload").click(function(){
+		$.ajax({
+			type:"POST",
+			url:"/uploadIMG",
+			success:function(data){
+				console.log("file success")
+			},
+			error:function(){
+				console.log("file upload error")
+			}
+		});
+	});
+	//爬百度数据
+	var page = 0;
+	function bugAjax(){
+		console.log(page);
+		$(".search-result ul").empty();
+		$.ajax({
+			type:"get",
+			url:"/bug",
+			data:{
+				name:"易保利",
+				page:page,
+			},
+			success:function(data){
+				console.log(data);
+				var _link = data.link;
+				var _title = data.title;
+				var _detail = data.detail;
+				var ele = "";
+				for(var i = 0; i < 10; i++ ){
+					ele += '<li class="item"><a href="'+_link[i]+'"><p>'+_title[i]+'</p><p>'+_detail[i]+'</p></a></li>';
+				}
+				$(".search-result ul").append(ele);
+			},
+			error:function(){
+				console.log("hack error")
+			}
+		});
+	}
+	//首页
+	$(".started").click(function(){
+		page = 0;
+		bugAjax();
+	});
+	//上一页
+	$(".up-page").click(function(){
+		(page > 0) ? (page-=10) : (page = 0);
+		bugAjax();
+	});
+	//下一页
+	$(".down-page").click(function(){
+		(page <100) ? (page+=10) : (page = 100);
+		bugAjax();
+	});
+	//尾页
+	$(".ended").click(function(){
+		page = 100;
+		bugAjax();
+	});
+</script>
+</body>
+</html>
